@@ -12,6 +12,8 @@ target 'validtssi' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
   target 'validtssiTests' do
     inherit! :complete
     # Pods for testing

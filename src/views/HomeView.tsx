@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   Button,
+  TouchableOpacity,
 } from 'react-native';
 import {checkConnected} from '../util/funtions';
 
@@ -47,15 +48,16 @@ const HomeView = ({navigation}) => {
         '&api_key=829751643419a7128b7ada50de590067&format=json',
     )
       .then(response => response.json())
-      .then(json => {
-        setDataArtist(json.topartists.artist);
+      .then(jsonAr => {
+        setDataArtist(jsonAr.topartists.artist);
       });
   };
 
   return connectStaus ? (
     <View style={styles.contenedor}>
       <View style={{flex: 1}}>
-        <View style={{flexDirection: 'row'}}>
+        <View
+          style={{flexDirection: 'row', justifyContent: 'center', margin: 10}}>
           <TextInput
             placeholder="Buscar por pais"
             onChangeText={settxtCountry}
@@ -68,19 +70,23 @@ const HomeView = ({navigation}) => {
           keyExtractor={(id, index) => index.toString()}
           renderItem={({item}) => (
             <Card>
-              <Text>{item.name}</Text>
-              <AutoHeightImage
-                width={100}
-                source={{uri: item.image[4]['#text']}}
-              />
+              <TouchableOpacity
+                onPress={() => navigation.navigate('HomeWeb', item)}>
+                <Text>{item.name}</Text>
+                <AutoHeightImage
+                  width={100}
+                  source={{uri: item.image[4]['#text']}}
+                />
 
-              <Text>listeners: {item.listeners}</Text>
+                <Text>listeners: {item.listeners}</Text>
+              </TouchableOpacity>
             </Card>
           )}
         />
       </View>
       <View style={{flex: 1}}>
-        <View style={{flexDirection: 'row'}}>
+        <View
+          style={{flexDirection: 'row', justifyContent: 'center', margin: 10}}>
           <TextInput
             placeholder="Buscar por Artista"
             onChangeText={settxtArtist}
@@ -93,14 +99,17 @@ const HomeView = ({navigation}) => {
           keyExtractor={(id, index) => index.toString()}
           renderItem={({item}) => (
             <Card>
-              <Text>{item.name}</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('HomeWeb', item)}>
+                <Text>{item.name}</Text>
 
-              <AutoHeightImage
-                width={100}
-                source={{uri: item.image[4]['#text']}}
-              />
+                <AutoHeightImage
+                  width={100}
+                  source={{uri: item.image[4]['#text']}}
+                />
 
-              <Text>listeners: {item.listeners}</Text>
+                <Text>listeners: {item.listeners}</Text>
+              </TouchableOpacity>
             </Card>
           )}
         />

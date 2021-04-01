@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Text, View, FlatList} from 'react-native';
 
 import dataOff from '../../json/dataOff.json';

@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeView from './src/views/HomeView';
+import HomeWeb from './src/views/HomeWeb';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const App = () => {
           },
         }}>
         <Stack.Screen name="Home" component={HomeView} />
+        <Stack.Screen name="HomeWeb" component={HomeWeb} />
       </Stack.Navigator>
     </NavigationContainer>
   );
