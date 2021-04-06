@@ -7,6 +7,8 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import {checkConnected} from '../util/funtions';
 
@@ -23,6 +25,9 @@ const HomeView = ({navigation}) => {
   const [dataArtist, setDataArtist] = useState([]);
   const [txtArtist, settxtArtist] = useState();
 
+  const [load, setLoad] = useState(false);
+  const [loadArtist, setLoadArtist] = useState(false);
+
   const [connectStaus, setConnecStatus] = useState(false);
 
   checkConnected().then(res => {
@@ -30,6 +35,7 @@ const HomeView = ({navigation}) => {
   });
 
   const country = () => {
+    if(txtCountry) {
     fetch(
       'http://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=' +
         txtCountry +
@@ -38,10 +44,22 @@ const HomeView = ({navigation}) => {
       .then(response => response.json())
       .then(json => {
         setData(json.topartists.artist);
+        setLoad(true);
       });
+    } else {
+      Alert.alert(
+        'Problema',
+        'Debes colocar un país para poder buscar',
+        [
+            { text: 'OK' },
+        ],
+        { cancelable: false }
+    );
+    }
   };
 
   const artist = () => {
+    if(txtArtist) {
     fetch(
       'http://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=' +
         txtArtist +
@@ -50,8 +68,25 @@ const HomeView = ({navigation}) => {
       .then(response => response.json())
       .then(jsonAr => {
         setDataArtist(jsonAr.topartists.artist);
+        setLoadArtist(true)
       });
+    } else {
+      Alert.alert(
+        'Problema',
+        'Debes colocar un país para poder buscar',
+        [
+            { text: 'OK' },
+        ],
+        { cancelable: false }
+    );
+    }
   };
+
+  const webView = (item) => {
+    navigation.navigate('HomeWeb', item)
+    setData([])
+    setDataArtist([])
+  }
 
   return connectStaus ? (
     <View style={styles.contenedor}>
@@ -59,11 +94,13 @@ const HomeView = ({navigation}) => {
         <View
           style={{flexDirection: 'row', justifyContent: 'center', margin: 10}}>
           <TextInput
+            style={{borderWidth: 1, margin: 1}}
             placeholder="Buscar por pais"
             onChangeText={settxtCountry}
           />
           <Button title="Buscar" onPress={() => country()} />
         </View>
+        {load ?  
         <FlatList
           data={data}
           horizontal={true}
@@ -71,7 +108,7 @@ const HomeView = ({navigation}) => {
           renderItem={({item}) => (
             <Card>
               <TouchableOpacity
-                onPress={() => navigation.navigate('HomeWeb', item)}>
+                onPress={() => webView(item)}>
                 <Text>{item.name}</Text>
                 <AutoHeightImage
                   width={100}
@@ -82,17 +119,21 @@ const HomeView = ({navigation}) => {
               </TouchableOpacity>
             </Card>
           )}
-        />
+        /> : <View>
+        <ActivityIndicator size="large" color="#2941DB" />
+      </View> }
       </View>
       <View style={{flex: 1}}>
         <View
           style={{flexDirection: 'row', justifyContent: 'center', margin: 10}}>
           <TextInput
+            style={{borderWidth: 1, margin: 1}}
             placeholder="Buscar por Artista"
             onChangeText={settxtArtist}
           />
           <Button title="Buscar" onPress={() => artist()} />
         </View>
+        {loadArtist ?
         <FlatList
           data={dataArtist}
           horizontal={true}
@@ -100,7 +141,7 @@ const HomeView = ({navigation}) => {
           renderItem={({item}) => (
             <Card>
               <TouchableOpacity
-                onPress={() => navigation.navigate('HomeWeb', item)}>
+                onPress={() => webView(item)}>
                 <Text>{item.name}</Text>
 
                 <AutoHeightImage
@@ -112,7 +153,9 @@ const HomeView = ({navigation}) => {
               </TouchableOpacity>
             </Card>
           )}
-        />
+        />: <View>
+        <ActivityIndicator size="large" color="#2941DB" />
+      </View>}
       </View>
     </View>
   ) : (
